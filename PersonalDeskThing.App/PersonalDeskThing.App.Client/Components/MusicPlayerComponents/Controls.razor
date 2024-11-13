@@ -1,0 +1,25 @@
+﻿<MudGrid Spacing="6" Justify="Justify.Center">
+    <MudItem>
+        <MudFab Color="Color.Primary" OnClick="@Player.PreviousSong" StartIcon="@Icons.Material.Filled.SkipPrevious" Size="Size.Medium" />
+    </MudItem>
+    <MudItem>
+        @if (IsPlaying)
+        {
+            <MudFab Color="Color.Primary" OnClick="@Player.Pause" StartIcon="@Icons.Material.Filled.Pause" Size="Size.Large" />
+        }
+        else
+        {
+            <MudFab Color="Color.Primary" OnClick="@Player.Play" StartIcon="@Icons.Material.Filled.PlayArrow" Size="Size.Large" />
+        }
+    </MudItem>
+    <MudItem>
+        <MudFab Color="Color.Primary" OnClick="@Player.NextSong" StartIcon="@Icons.Material.Filled.SkipNext" Size="Size.Medium" />
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public required IMusicPlayer Player { get; set; }
+    [Parameter]
+    public required bool IsPlaying { get; set; }
+}

@@ -1,0 +1,93 @@
+﻿<MudGrid>
+    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+        <MudItem xs="0" sm="0" md="2" Class="my-auto">
+            @if (hasHours(@Song.Duration))
+            {
+                <MudText Align="Align.Center" Typo="Typo.h6">@Song.Progress.ToString("hh\\:mm\\:ss")</MudText>
+            }
+            else
+            {
+                <MudText Align="Align.Center" Typo="Typo.h6">@Song.Progress.ToString("mm\\:ss")</MudText>
+            }
+        </MudItem>
+    </MudHidden>
+    <MudItem xs="12" sm="12" md="8">
+        <MudProgressLinear Rounded="true" Size="Size.Large" Color="Color.Primary" Value="@progressValue" Class="my-7" />
+    </MudItem>
+    <MudHidden Breakpoint="Breakpoint.SmAndDown">
+        <MudItem xs="0" sm="0" md="2" Class="my-auto">
+            @if (hasHours(@Song.Duration))
+            {
+                <MudText Align="Align.Center" Typo="Typo.h6">@Song.Duration.ToString("hh\\:mm\\:ss")</MudText>
+            }
+            else
+            {
+                <MudText Align="Align.Center" Typo="Typo.h6">@Song.Duration.ToString("mm\\:ss")</MudText>
+            }
+        </MudItem>
+    </MudHidden>
+</MudGrid>
+@code {
+    [Parameter]
+    public required PlayingSong Song { get; set; }
+    [Parameter]
+    public EventCallback OnSongFinished { get; set; }
+
+    int progressValue;
+    static System.Timers.Timer _refreshProgress = null!;
+    DateTime _lastUpdate = DateTime.Now;
+
+    protected override void OnInitialized()
+    {
+        _refreshProgress = new System.Timers.Timer(250);
+        _refreshProgress.Elapsed += async (sender, e) => await updateProgress(true);
+        _refreshProgress.Enabled = true;
+
+        updateProgressValue();
+    }
+    bool hasHours(TimeSpan duration)
+    {
+        return duration.TotalHours >= 1;
+    }
+    protected override void OnParametersSet()
+    {
+        _lastUpdate = DateTime.Now;
+    }
+    void updateProgressValue()
+    {
+        int durationInMs = Convert.ToInt32(Song.Duration.TotalMilliseconds);
+
+        progressValue = (Convert.ToInt32(Song.Progress.TotalMilliseconds) * 100) / durationInMs;
+    }
+    async Task updateProgress(bool update)
+    {
+        TimeSpan timeSpan = DateTime.Now - _lastUpdate;
+        _lastUpdate = DateTime.Now;
+
+        if (Song == null)
+        {
+            return;
+        }
+
+        if (Song.IsPlaying)
+        {
+            Song.Progress += timeSpan;
+            updateProgressValue();
+        }
+        if (progressValue >= 100)
+        {
+            await InvokeAsync(async () =>
+            {
+                await OnSongFinished.InvokeAsync();
+                StateHasChanged();
+            });
+        }
+        else
+        {
+            await InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        }
+    }
+}

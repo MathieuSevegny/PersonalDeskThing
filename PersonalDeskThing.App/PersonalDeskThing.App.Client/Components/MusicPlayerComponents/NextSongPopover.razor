@@ -1,0 +1,47 @@
+﻿@if (_nextSong == null)
+{
+    return;
+}
+
+<MudPopover Open="@_open" Fixed="true" Class="px-4 pt-4" AnchorOrigin="Origin.CenterCenter" TransformOrigin="Origin.TopLeft">
+    <div class="d-flex flex-column">
+        <MudText>Prochaine : @_nextSong.Name</MudText>
+    </div>
+</MudPopover>
+
+@code {
+    [Parameter]
+    public required IMusicPlayer Player { get; set; }
+    [Parameter]
+    public required PlayingSong PlayingSong { get; set; }
+    Song? _nextSong;
+    bool _open = false;
+    readonly static TimeSpan timeLeft = TimeSpan.FromSeconds(10);
+    async Task updateData()
+    {
+        var newSong = await Player.GetNextSong();
+        if (newSong == null)
+        {
+            return;
+        }
+        _nextSong = newSong;
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        await updateData();
+        PlayingSong.ProgressChanged += async(sender, e) => await progressChanged();
+        await progressChanged();
+    }
+    async Task progressChanged()
+    {
+        _open = PlayingSong.Progress >= PlayingSong.Duration - timeLeft;
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

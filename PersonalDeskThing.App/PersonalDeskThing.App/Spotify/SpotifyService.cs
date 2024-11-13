@@ -87,9 +87,24 @@ namespace PersonalDeskThing.App.Spotify
             return true;
         }
 
-        public Task<Song?> GetNextSong()
+        public async Task<Song?> GetNextSong()
         {
-            throw new NotImplementedException();
+            var queue = await _client.Player.GetQueue().ConfigureAwait(true);
+            if (queue == null || queue.Queue.Count == 0)
+            {
+                return null;
+            }
+            var builder = new SongBuilder();
+
+            if (queue.Queue[0] is not FullTrack ft)
+            {
+                return null;
+            }
+            return builder.WithName(ft.Name)
+                    .WithArtists(ft.Artists.ConvertAll(a => a.Convert()))
+                    .WithAlbum(ft.Album.Convert())
+                    .WithDuration(TimeSpan.FromMilliseconds(ft.DurationMs))
+                    .Build();
         }
         async Task sendSongUpdated()
         {

@@ -1,0 +1,8 @@
+﻿<MudText Typo="Typo.h4" Align="Align.Center">@PlayingSong.Name</MudText>
+<br />
+<MudText Typo="Typo.h5" Align="Align.Center">@string.Join(", ", PlayingSong.Artists.Select(a => a.Name))</MudText>
+<br />
+@code {
+    [Parameter]
+    public required PlayingSong PlayingSong { get; set; }
+}
