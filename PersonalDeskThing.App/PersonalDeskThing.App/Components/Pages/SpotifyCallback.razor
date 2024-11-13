@@ -1,0 +1,27 @@
+﻿@page "/spotify-callback"
+@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager NavManager
+@inject SpotifyAuthService SpotifyAuthService
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        if (NavManager.TryGetQueryString<string>("code", out string? code))
+        {
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                NavManager.NavigateTo("/");
+                return;
+            }
+
+            var service = await SpotifyAuthService.CreateFromCode(code).ConfigureAwait(true);
+
+            if (service == null)
+            {
+
+                return;
+            }
+            NavManager.NavigateTo("/");
+        }
+    }
+}

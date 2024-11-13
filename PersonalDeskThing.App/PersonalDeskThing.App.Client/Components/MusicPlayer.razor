@@ -1,0 +1,163 @@
+﻿@rendermode InteractiveAuto
+@if(playingSong == null)
+{
+    <h4>No song is playing</h4>
+    return;
+}
+
+
+<MudContainer>
+    <MudGrid Justify="Justify.Center">
+        <MudItem md="12" xl="6" xxl="6">
+            <MudPaper Class="align-center justify-center">
+                <MudGrid Justify="Justify.Center" Class="align-center justify-center mud-width-full">
+                    <MudItem md="6" Class="d-flex align-center justify-center mud-width-full">
+                        <MudImage Class="rounded-lg" Src="@playingSong.ImageUrl.ToString()" Width="275" Height="275" />
+                    </MudItem>
+                    <MudItem xs="12" sm="6" md="6">
+                        <MudText Typo="Typo.h4" Align="Align.Center">@playingSong.Name</MudText>
+                        <br />
+                        <MudText Typo="Typo.h5" Align="Align.Center">@string.Join(", ", playingSong.Artists.Select(a => a.Name))</MudText>
+                        <br />
+                        <MudGrid Spacing="6" Justify="Justify.Center">
+                            <MudItem>
+                                <MudFab Color="Color.Primary" OnClick="@Player.PreviousSong" StartIcon="@Icons.Material.Filled.SkipPrevious" Size="Size.Medium" />
+                            </MudItem>
+                            <MudItem>
+                                @if (playingSong.IsPlaying)
+                                {
+                                    <MudFab Color="Color.Primary" OnClick="@Player.Pause" StartIcon="@Icons.Material.Filled.Pause" Size="Size.Large" />
+                                }
+                                else
+                                {
+                                    <MudFab Color="Color.Primary" OnClick="@Player.Play" StartIcon="@Icons.Material.Filled.PlayArrow" Size="Size.Large" />
+                                }
+                            </MudItem>
+                            <MudItem>
+                                <MudFab Color="Color.Primary" OnClick="@Player.NextSong" StartIcon="@Icons.Material.Filled.SkipNext" Size="Size.Medium" />
+                            </MudItem>
+                        </MudGrid>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+            <MudGrid>
+                <MudHidden Breakpoint="Breakpoint.Sm">
+                    <MudItem sm="0" md="2" Class="my-auto">
+                        @if (hasHours(@playingSong.Duration))
+                        {
+                            <MudText Align="Align.Center" Typo="Typo.h6">@progress.ToString("hh\\:mm\\:ss")</MudText>
+                        }
+                        else
+                        {
+                            <MudText Align="Align.Center" Typo="Typo.h6">@progress.ToString("mm\\:ss")</MudText>
+                        }
+                    </MudItem>
+                </MudHidden>
+                <MudItem sm="12" md="8">
+                    <MudProgressLinear Rounded="true" Size="Size.Large" Color="Color.Primary" Value="@progressValue" Class="my-7" />
+                </MudItem>
+                <MudHidden Breakpoint="Breakpoint.Sm">
+                    <MudItem sm="0" md="2" Class="my-auto">
+                        @if (hasHours(@playingSong.Duration))
+                        {
+                            <MudText Align="Align.Center" Typo="Typo.h6">@playingSong.Duration.ToString("hh\\:mm\\:ss")</MudText>
+                        }
+                        else
+                        {
+                            <MudText Align="Align.Center" Typo="Typo.h6">@playingSong.Duration.ToString("mm\\:ss")</MudText>
+                        }
+                    </MudItem>
+                </MudHidden>
+            </MudGrid>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+
+@code {
+    [Parameter]
+    public required IMusicPlayer Player { get; set; }
+    PlayingSong? playingSong;
+    int progressValue;
+    TimeSpan progress;
+    static System.Timers.Timer _refreshDataTimer = null!;
+    static System.Timers.Timer _refreshProgress = null!;
+    DateTime? _lastUpdate;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await updateData();
+        _refreshProgress = new System.Timers.Timer(250);
+        _refreshProgress.Elapsed += async (sender, e) => await updateProgress();
+        _refreshProgress.Enabled = true;
+
+        _refreshDataTimer = new System.Timers.Timer(10000);
+        _refreshDataTimer.Elapsed += async (sender, e) => await updateData();
+        _refreshDataTimer.Enabled = true;
+        _lastUpdate = DateTime.Now;
+
+        Player.OnSongUpdated += async(sender,e) => await updateData();
+    }
+    void updateValues(PlayingSong song)
+    {
+        playingSong = song;
+        progress = playingSong!.Progress;
+        updateProgressValue();
+        _lastUpdate = DateTime.Now;
+    }
+    bool hasHours(TimeSpan duration)
+    {
+        return duration.TotalHours >= 1;
+    }
+    async Task updateProgress()
+    {
+       TimeSpan timeSpan = DateTime.Now - _lastUpdate!.Value;
+        _lastUpdate = DateTime.Now;
+
+        if (playingSong == null)
+        {
+            return;
+        }
+
+        if (playingSong.IsPlaying)
+        {
+            progress += timeSpan;
+            updateProgressValue();
+        }
+        if (progressValue >= 100)
+        {
+            await updateData();
+        }
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+    async Task updateData()
+    {
+        var newSong = await Player.GetCurrentSong();
+
+        if (newSong == null)
+        {
+            return;
+        }
+
+        updateValues(newSong);
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+    void updateProgressValue()
+    {
+        int durationInMs = Convert.ToInt32(playingSong!.Duration.TotalMilliseconds);
+
+        progressValue = (Convert.ToInt32(progress.TotalMilliseconds) * 100) / durationInMs;
+    }
+    public void Dispose()
+    {
+        _refreshDataTimer?.Dispose();
+        _refreshProgress?.Dispose();
+    }
+}

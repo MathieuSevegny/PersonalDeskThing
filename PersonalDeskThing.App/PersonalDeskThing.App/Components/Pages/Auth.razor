@@ -1,0 +1,13 @@
+﻿@page "/auth"
+@inject NavigationManager NavManager
+@inject SpotifyAuthService SpotifyAuthService
+
+<h3>Auth</h3>
+
+@code {
+    protected override void OnInitialized()
+    {
+        Uri loginUri = SpotifyAuthService.CreateLoginRequestUri();
+        NavManager.NavigateTo(loginUri.ToString());
+    }
+}

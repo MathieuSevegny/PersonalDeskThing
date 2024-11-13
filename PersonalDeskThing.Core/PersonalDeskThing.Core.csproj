@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>all</AnalysisMode>
+    <DebugType>portable</DebugType>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.0</Version>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RootNamespace>PersonalDeskThing.Core</RootNamespace>
+    <LangVersion>12.0</LangVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <OutputPath>$(SolutionDir)\bin\$(Configuration)\</OutputPath>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="SpotifyAPI.Web" Version="7.2.1" />
+    <PackageReference Include="SpotifyAPI.Web.Auth" Version="7.2.1" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'"><CheckForOverflowUnderflow>true</CheckForOverflowUnderflow><DebugSymbols>true</DebugSymbols><DefineConstants>DEBUG;TRACE</DefineConstants></PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'"><TreatWarningsAsErrors>true</TreatWarningsAsErrors><DebugSymbols>false</DebugSymbols><DefineConstants>CODE_ANALYSIS;TRACE</DefineConstants></PropertyGroup>
+</Project>
