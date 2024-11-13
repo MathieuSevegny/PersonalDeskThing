@@ -1,8 +1,8 @@
 using PersonalDeskThing.App.Components;
-using PersonalDeskThing.App.Core.Cache;
-using PersonalDeskThing.App.Core.Models.Options;
-using PersonalDeskThing.App.Core.Spotify;
 using MudBlazor.Services;
+using PersonalDeskThing.App.Cache;
+using PersonalDeskThing.App.Spotify;
+using PersonalDeskThing.App.Models.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 

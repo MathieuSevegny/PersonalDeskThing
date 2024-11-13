@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using PersonalDeskThing.App.Core.Cache;
-using PersonalDeskThing.App.Core.Models.Options;
+using PersonalDeskThing.App.Cache;
+using PersonalDeskThing.App.Models.Options;
 using SpotifyAPI.Web;
 using static SpotifyAPI.Web.Scopes;
 
-namespace PersonalDeskThing.App.Core.Spotify
+namespace PersonalDeskThing.App.Spotify
 {
     class SpotifyAuthService
     {
@@ -23,7 +23,7 @@ namespace PersonalDeskThing.App.Core.Spotify
         }
         public Uri CreateLoginRequestUri()
         {
-            var(verifier, challenge) = PKCEUtil.GenerateCodes();
+            var (verifier, challenge) = PKCEUtil.GenerateCodes();
             _latestVerifier = verifier;
             var request = new LoginRequest(_callbackUri, _options.ClientId, LoginRequest.ResponseType.Code)
             {
@@ -64,7 +64,7 @@ namespace PersonalDeskThing.App.Core.Spotify
             var token = JsonConvert.DeserializeObject<PKCETokenResponse>(json);
 
             var authenticator = new PKCEAuthenticator(_options.ClientId!, token!);
-            authenticator.TokenRefreshed += async(sender, token) => await _cache.SetValue(CacheKeys.SpotifyCredentials, JsonConvert.SerializeObject(token));
+            authenticator.TokenRefreshed += async (sender, token) => await _cache.SetValue(CacheKeys.SpotifyCredentials, JsonConvert.SerializeObject(token));
 
             var config = SpotifyClientConfig.CreateDefault()
               .WithAuthenticator(authenticator);

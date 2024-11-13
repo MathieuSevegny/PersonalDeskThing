@@ -1,4 +1,4 @@
-﻿namespace PersonalDeskThing.Core.Models
+﻿namespace PersonalDeskThing.App.Client.Models
 {
     public class PlayingSong : Song
     {

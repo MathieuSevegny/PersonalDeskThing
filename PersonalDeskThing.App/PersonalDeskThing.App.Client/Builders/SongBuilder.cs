@@ -1,8 +1,6 @@
-﻿using PersonalDeskThing.Core.Models;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using PersonalDeskThing.App.Client.Models;
 
-namespace PersonalDeskThing.Core.Builders
+namespace PersonalDeskThing.App.Client.Builders
 {
     public class SongBuilder
     {

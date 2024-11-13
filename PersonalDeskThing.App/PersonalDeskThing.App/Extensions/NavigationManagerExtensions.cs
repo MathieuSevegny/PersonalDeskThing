@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace PersonalDeskThing.App.Core.Extensions
+namespace PersonalDeskThing.App.Extensions
 {
     /// <summary>
     /// Extensions for the NavigationManager class

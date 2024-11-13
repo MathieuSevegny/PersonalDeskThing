@@ -1,4 +1,4 @@
-﻿namespace PersonalDeskThing.App.Core.Models.Options
+﻿namespace PersonalDeskThing.App.Models.Options
 {
     class SpotifyOptions
     {

@@ -1,4 +1,4 @@
-﻿namespace PersonalDeskThing.App.Core.Cache
+﻿namespace PersonalDeskThing.App.Cache
 {
     public static class CacheKeys
     {

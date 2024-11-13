@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using PersonalDeskThing.App.Core.Models.Options;
+using PersonalDeskThing.App.Models.Options;
 
-namespace PersonalDeskThing.App.Core.Cache
+namespace PersonalDeskThing.App.Cache
 {
     class CacheService
     {

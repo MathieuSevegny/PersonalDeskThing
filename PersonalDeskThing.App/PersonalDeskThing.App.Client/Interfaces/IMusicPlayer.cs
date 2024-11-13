@@ -1,6 +1,6 @@
-﻿using PersonalDeskThing.Core.Models;
+﻿using PersonalDeskThing.App.Client.Models;
 
-namespace PersonalDeskThing.Core.Interfaces
+namespace PersonalDeskThing.App.Client.Interfaces
 {
     public interface IMusicPlayer
     {

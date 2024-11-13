@@ -1,7 +1,7 @@
-﻿using PersonalDeskThing.Core.Models;
+﻿using PersonalDeskThing.App.Client.Models;
 using SpotifyAPI.Web;
 
-namespace PersonalDeskThing.App.Core.Extensions
+namespace PersonalDeskThing.App.Extensions
 {
     static class SpotifyExtensions
     {

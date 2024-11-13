@@ -1,10 +1,10 @@
-﻿using PersonalDeskThing.Core.Interfaces;
-using PersonalDeskThing.Core.Models;
+﻿using PersonalDeskThing.App.Client.Interfaces;
+using PersonalDeskThing.App.Client.Models;
 using SpotifyAPI.Web;
-using PersonalDeskThing.Core.Builders;
-using PersonalDeskThing.App.Core.Extensions;
+using PersonalDeskThing.App.Client.Builders;
+using PersonalDeskThing.App.Extensions;
 
-namespace PersonalDeskThing.App.Core.Spotify
+namespace PersonalDeskThing.App.Spotify
 {
     class SpotifyService : IMusicPlayer
     {
@@ -24,7 +24,7 @@ namespace PersonalDeskThing.App.Core.Spotify
             {
                 privateUser = await _client.UserProfile.Current();
             }
-            catch(APIUnauthorizedException)
+            catch (APIUnauthorizedException)
             {
                 return false;
             }
@@ -40,6 +40,11 @@ namespace PersonalDeskThing.App.Core.Spotify
         {
             var playback = await _client.Player.GetCurrentPlayback();
             var builder = new SongBuilder();
+
+            if (playback == null)
+            {
+                return null;
+            }
 
             if (playback.Item is FullTrack ft)
             {
@@ -89,7 +94,7 @@ namespace PersonalDeskThing.App.Core.Spotify
         async Task sendSongUpdated()
         {
             await Task.Delay(100).ConfigureAwait(true);
-            OnSongUpdated?.Invoke(this,null!);
+            OnSongUpdated?.Invoke(this, null!);
         }
     }
 }

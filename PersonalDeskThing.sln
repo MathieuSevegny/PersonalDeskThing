@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalDeskThing.Core", "PersonalDeskThing.Core\PersonalDeskThing.Core.csproj", "{8AB76058-D9BA-4CC5-A550-22A0C6B4A506}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalDeskThing.App", "PersonalDeskThing.App\PersonalDeskThing.App\PersonalDeskThing.App.csproj", "{516BE5E9-440C-437C-8E0A-40B607E4B554}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalDeskThing.App.Client", "PersonalDeskThing.App\PersonalDeskThing.App.Client\PersonalDeskThing.App.Client.csproj", "{632ED20C-86DD-45EF-9D5C-B1CF75C03C79}"
@@ -20,10 +18,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8AB76058-D9BA-4CC5-A550-22A0C6B4A506}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8AB76058-D9BA-4CC5-A550-22A0C6B4A506}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8AB76058-D9BA-4CC5-A550-22A0C6B4A506}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8AB76058-D9BA-4CC5-A550-22A0C6B4A506}.Release|Any CPU.Build.0 = Release|Any CPU
 		{516BE5E9-440C-437C-8E0A-40B607E4B554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{516BE5E9-440C-437C-8E0A-40B607E4B554}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{516BE5E9-440C-437C-8E0A-40B607E4B554}.Release|Any CPU.ActiveCfg = Release|Any CPU
