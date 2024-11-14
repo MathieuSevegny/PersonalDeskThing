@@ -36,7 +36,7 @@ namespace PersonalDeskThing.App.Spotify
             return privateUser != null;
         }
 
-        public async Task<PlayingSong?> GetCurrentSong()
+        public async Task<PlaybackState?> GetCurrentPlaybackState()
         {
             CurrentlyPlayingContext? playback;
             try
@@ -55,20 +55,40 @@ namespace PersonalDeskThing.App.Spotify
             {
                 return null;
             }
+            PlaybackState playbackState = new PlaybackState()
+            {
+                RepeatState = new RepeatState(playback.RepeatState),
+                ShuffleState = playback.ShuffleState
+            };
 
             if (playback.Item is FullTrack ft)
             {
-                return builder.WithName(ft.Name)
+                var song = builder.WithName(ft.Name)
                     .WithArtists(ft.Artists.ConvertAll(a => a.Convert()))
                     .WithAlbum(ft.Album.Convert())
                     .WithDuration(TimeSpan.FromMilliseconds(ft.DurationMs))
                     .WithProgress(TimeSpan.FromMilliseconds(playback.ProgressMs))
                     .WithIsPlaying(playback.IsPlaying)
                     .BuildPlaying();
+                playbackState.CurrentSong = song;
+                return playbackState;
             }
             return null;
         }
-
+        public async Task<bool> SetShuffle(bool shuffle)
+        {
+            PlayerShuffleRequest request = new PlayerShuffleRequest(shuffle);
+            try
+            {
+                await _client.Player.SetShuffle(request).ConfigureAwait(true);
+                await sendSongUpdated().ConfigureAwait(true);
+            }
+            catch (Exception e) {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
+        }
         public async Task<bool> NextSong()
         {
             try
@@ -165,6 +185,30 @@ namespace PersonalDeskThing.App.Spotify
         {
             await Task.Delay(100).ConfigureAwait(true);
             OnSongUpdated?.Invoke(this, null!);
+        }
+
+        public async Task<bool> SetRepeat(RepeatState repeatState)
+        {
+            PlayerSetRepeatRequest.State state = repeatState.Mode switch
+            {
+                RepeatState.RepeatMode.Off => PlayerSetRepeatRequest.State.Off,
+                RepeatState.RepeatMode.Context => PlayerSetRepeatRequest.State.Context,
+                RepeatState.RepeatMode.Track => PlayerSetRepeatRequest.State.Track,
+                _ => throw new NotImplementedException()
+            };
+
+            PlayerSetRepeatRequest request = new(state);
+            try
+            {
+                await _client.Player.SetRepeat(request).ConfigureAwait(true);
+                await sendSongUpdated().ConfigureAwait(true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
         }
     }
 }

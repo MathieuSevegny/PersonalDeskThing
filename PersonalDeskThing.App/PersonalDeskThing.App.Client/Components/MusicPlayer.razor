@@ -1,6 +1,6 @@
 ﻿@rendermode InteractiveAuto
 @using PersonalDeskThing.App.Client.Components.MusicPlayerComponents
-@if(playingSong == null)
+@if (playbackState == null || playbackState.CurrentSong == null)
 {
     <h4>No song is playing</h4>
     return;
@@ -8,20 +8,20 @@
 
 <MudContainer>
     <MudGrid Justify="Justify.Center">
-        <MudItem md="12" xl="6" xxl="6">
+        <MudItem md="12" xl="12" xxl="12">
             <MudPaper Class="align-center justify-center">
                 <MudGrid Justify="Justify.Center" Class="align-center justify-center mud-width-full">
                     <MudItem md="6" Class="d-flex align-center justify-center mud-width-full">
-                        <AlbumCover ImageUrl="@playingSong.ImageUrl"/>
+                        <AlbumCover ImageUrl="@playbackState.CurrentSong.ImageUrl" />
                     </MudItem>
-                    <MudItem xs="12" sm="6" md="6">
-                        <SongInfo PlayingSong="@playingSong"/>
-                        <Controls Player="@Player" IsPlaying="@playingSong.IsPlaying" />
+                    <MudItem xs="12" sm="8" md="8" Class="my-3">
+                        <SongInfo PlayingSong="@playbackState.CurrentSong" />
+                        <Controls Player="@Player" PlaybackState="@playbackState" />
                     </MudItem>
                 </MudGrid>
-                <NextSongPopover Player="@Player" PlayingSong="@playingSong" />
+                <NextSongPopover Player="@Player" PlayingSong="@playbackState?.CurrentSong" />
             </MudPaper>
-            <ProgressBar Song="@playingSong" OnSongFinished="updateData" />
+            <ProgressBar Song="@playbackState.CurrentSong" OnSongFinished="updateData" />
         </MudItem>
     </MudGrid>
 </MudContainer>
@@ -30,7 +30,7 @@
 @code {
     [Parameter]
     public required IMusicPlayer Player { get; set; }
-    PlayingSong? playingSong;
+    PlaybackState? playbackState;
     static System.Timers.Timer _refreshDataTimer = null!;
     
 
@@ -47,14 +47,14 @@
     
     async Task updateData()
     {
-        var newSong = await Player.GetCurrentSong();
+        var newState = await Player.GetCurrentPlaybackState();
 
-        if (newSong == null)
+        if (newState == null)
         {
             return;
         }
 
-        playingSong = newSong;
+        playbackState = newState;
 
         await InvokeAsync(() =>
         {

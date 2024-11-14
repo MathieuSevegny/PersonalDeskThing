@@ -1,25 +1,50 @@
-﻿<MudGrid Spacing="6" Justify="Justify.Center">
+﻿<MudGrid Spacing="4" Justify="Justify.Center">
+    <MudItem>
+        @if (PlaybackState.ShuffleState)
+        {
+            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Shuffle" Color="Color.Success" OnClick="@(()=>Player.SetShuffle(false))" aria-label="shuffle" />
+        }
+        else
+        {
+            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Shuffle" Color="Color.Dark" OnClick="@(()=>Player.SetShuffle(true))" aria-label="shuffle" />
+        }
+    </MudItem>
     <MudItem>
         <MudFab Color="Color.Primary" OnClick="@Player.PreviousSong" StartIcon="@Icons.Material.Filled.SkipPrevious" Size="Size.Medium" />
     </MudItem>
     <MudItem>
-        @if (IsPlaying)
+        @if (PlaybackState.CurrentSong!.IsPlaying)
         {
-            <MudFab Color="Color.Primary" OnClick="@Player.Pause" StartIcon="@Icons.Material.Filled.Pause" Size="Size.Large" />
+            <MudFab Color="Color.Primary" OnClick="@Player.Pause" StartIcon="@Icons.Material.Filled.Pause" Size="Size.Medium" />
         }
         else
         {
-            <MudFab Color="Color.Primary" OnClick="@Player.Play" StartIcon="@Icons.Material.Filled.PlayArrow" Size="Size.Large" />
+            <MudFab Color="Color.Primary" OnClick="@Player.Play" StartIcon="@Icons.Material.Filled.PlayArrow" Size="Size.Medium" />
         }
     </MudItem>
     <MudItem>
         <MudFab Color="Color.Primary" OnClick="@Player.NextSong" StartIcon="@Icons.Material.Filled.SkipNext" Size="Size.Medium" />
     </MudItem>
+    <MudItem>
+        @if (PlaybackState.RepeatState.Mode == RepeatState.RepeatMode.Off)
+        {
+            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Repeat" Color="Color.Dark" OnClick="@(()=> Player.SetRepeat(new RepeatState(RepeatState.RepeatMode.Track)))" aria-label="repeat" />
+        }
+        else if (PlaybackState.RepeatState.Mode == RepeatState.RepeatMode.Track)
+        {
+            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.RepeatOne" Color="Color.Success" OnClick="@(()=> Player.SetRepeat(new RepeatState(RepeatState.RepeatMode.Context)))" aria-label="repeat" />
+        }
+        else
+        {
+            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Repeat" Color="Color.Success" OnClick="@(()=> Player.SetRepeat(new RepeatState(RepeatState.RepeatMode.Off)))" aria-label="repeat" />
+        }
+    </MudItem>
+
 </MudGrid>
 
 @code {
     [Parameter]
     public required IMusicPlayer Player { get; set; }
     [Parameter]
-    public required bool IsPlaying { get; set; }
+    public required PlaybackState PlaybackState { get; set; }
 }
