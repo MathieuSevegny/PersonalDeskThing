@@ -6,13 +6,26 @@
 
 
 <PageTitle>Home</PageTitle>
-
+<MudAppBar Color="Color.Primary" Fixed="false">
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
+    <MudSpacer />
+</MudAppBar>
 
 @if (service == null){
-    <MudButton Color="Color.Primary" Variant="Variant.Filled" Href="/auth">Connect to Spotify</MudButton>
+    <MudDialog Visible="@(service == null)">
+        <TitleContent>
+            <MudText Typo="Typo.h5">Connexion à Spotify</MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudText Typo="Typo.body1">Vous devez être connecté à Spotify pour utiliser cette application.</MudText>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" Href="/auth">Se connecter</MudButton>
+        </DialogActions>
+    </MudDialog>
 }
 else{
-    <MudPaper Width="100%">
+    <MudPaper Width="100%" Class="pt-6">
         <MusicPlayer Player="service"/>
     </MudPaper>
 }
