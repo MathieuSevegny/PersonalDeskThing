@@ -3,6 +3,7 @@ using PersonalDeskThing.App.Client.Models;
 using SpotifyAPI.Web;
 using PersonalDeskThing.App.Client.Builders;
 using PersonalDeskThing.App.Extensions;
+using SpotifyAPI.Web.Http;
 
 namespace PersonalDeskThing.App.Spotify
 {
@@ -38,9 +39,14 @@ namespace PersonalDeskThing.App.Spotify
 
         public async Task<PlaybackState?> GetCurrentPlaybackState()
         {
-            CurrentlyPlayingContext? playback;
+            CurrentlyPlayingContext? playback = null;
             try
             {
+                playback = await _client.Player.GetCurrentPlayback();
+            }
+            catch(APITooManyRequestsException e)
+            {
+                await Task.Delay(e.RetryAfter);
                 playback = await _client.Player.GetCurrentPlayback();
             }
             catch (Exception e)
@@ -83,6 +89,12 @@ namespace PersonalDeskThing.App.Spotify
                 await _client.Player.SetShuffle(request).ConfigureAwait(true);
                 await sendSongUpdated().ConfigureAwait(true);
             }
+            catch (APITooManyRequestsException e)
+            {
+                await Task.Delay(e.RetryAfter);
+                await _client.Player.SetShuffle(request).ConfigureAwait(true);
+                await sendSongUpdated().ConfigureAwait(true);
+            }
             catch (Exception e) {
                 Console.WriteLine(e.Message);
                 return false;
@@ -93,6 +105,12 @@ namespace PersonalDeskThing.App.Spotify
         {
             try
             {
+                await _client.Player.SkipNext().ConfigureAwait(true);
+                await sendSongUpdated().ConfigureAwait(true);
+            }
+            catch (APITooManyRequestsException e)
+            {
+                await Task.Delay(e.RetryAfter);
                 await _client.Player.SkipNext().ConfigureAwait(true);
                 await sendSongUpdated().ConfigureAwait(true);
             }
@@ -112,7 +130,13 @@ namespace PersonalDeskThing.App.Spotify
                 await _client.Player.PausePlayback().ConfigureAwait(true);
                 await sendSongUpdated().ConfigureAwait(true);
             }
-            catch(Exception e)
+            catch (APITooManyRequestsException e)
+            {
+                await Task.Delay(e.RetryAfter);
+                await _client.Player.PausePlayback().ConfigureAwait(true);
+                await sendSongUpdated().ConfigureAwait(true);
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return false;
@@ -125,6 +149,12 @@ namespace PersonalDeskThing.App.Spotify
         {
             try
             {
+                await _client.Player.ResumePlayback().ConfigureAwait(true);
+                await sendSongUpdated().ConfigureAwait(true);
+            }
+            catch (APITooManyRequestsException e)
+            {
+                await Task.Delay(e.RetryAfter);
                 await _client.Player.ResumePlayback().ConfigureAwait(true);
                 await sendSongUpdated().ConfigureAwait(true);
             }
@@ -144,7 +174,13 @@ namespace PersonalDeskThing.App.Spotify
                 await _client.Player.SkipPrevious().ConfigureAwait(true);
                 await sendSongUpdated().ConfigureAwait(true);
             }
-            catch(Exception e)
+            catch (APITooManyRequestsException e)
+            {
+                await Task.Delay(e.RetryAfter);
+                await _client.Player.SkipPrevious().ConfigureAwait(true);
+                await sendSongUpdated().ConfigureAwait(true);
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return false;
@@ -155,12 +191,17 @@ namespace PersonalDeskThing.App.Spotify
 
         public async Task<Song?> GetNextSong()
         {
-            QueueResponse? queue;
+            QueueResponse? queue = null;
             try
             {
                 queue = await _client.Player.GetQueue().ConfigureAwait(true);
             }
-            catch(Exception e)
+            catch (APITooManyRequestsException e)
+            {
+                await Task.Delay(e.RetryAfter);
+                queue = await _client.Player.GetQueue().ConfigureAwait(true);
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return null;
@@ -200,6 +241,12 @@ namespace PersonalDeskThing.App.Spotify
             PlayerSetRepeatRequest request = new(state);
             try
             {
+                await _client.Player.SetRepeat(request).ConfigureAwait(true);
+                await sendSongUpdated().ConfigureAwait(true);
+            }
+            catch (APITooManyRequestsException e)
+            {
+                await Task.Delay(e.RetryAfter);
                 await _client.Player.SetRepeat(request).ConfigureAwait(true);
                 await sendSongUpdated().ConfigureAwait(true);
             }

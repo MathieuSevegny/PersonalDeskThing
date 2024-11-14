@@ -12,7 +12,7 @@
 </MudAppBar>
 
 @if (service == null){
-    <MudDialog Visible="@(service == null)">
+    <MudDialog Visible="@showLoginDialog">
         <TitleContent>
             <MudText Typo="Typo.h5">Connexion à Spotify</MudText>
         </TitleContent>
@@ -32,12 +32,15 @@ else{
 
 @code {
     SpotifyService? service;
+    bool showLoginDialog = false;
+
     protected override async Task OnInitializedAsync()
     {
         var tempService = await SpotifyAuthService.CreateFromCache();
 
         if (tempService == null)
         {
+            showLoginDialog = true;
             return;
         }
 
@@ -45,6 +48,7 @@ else{
 
         if (!isStillConnected)
         {
+            showLoginDialog = true;
             return;
         }
 
