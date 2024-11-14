@@ -1,5 +1,7 @@
-﻿<MudImage ObjectPosition="ObjectPosition.Center" Fluid="true" Class="rounded-lg" Src="@ImageUrl.ToString()" />
+﻿<MudImage ObjectPosition="ObjectPosition.Center" Height="@Height" Width="@Height" Class="rounded-lg" Src="@ImageUrl.ToString()" />
 @code {
     [Parameter]
     public required Uri ImageUrl { get; set; }
+    [Parameter]
+    public int Height { get; set; } = 250;
 }

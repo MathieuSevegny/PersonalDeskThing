@@ -3,10 +3,13 @@
     return;
 }
 
-<MudPopover Open="@_open" Fixed="true" Class="px-4 pt-4" AnchorOrigin="Origin.CenterCenter" TransformOrigin="Origin.TopLeft">
-    <div class="d-flex flex-column">
-        <MudText>Prochaine : @_nextSong.Name</MudText>
-    </div>
+<MudPopover Open="@_open" Fixed="true" Class="pl-2 py-2 d-flex" AnchorOrigin="Origin.TopCenter" RelativeWidth="true" TransformOrigin="Origin.TopCenter">
+    <AlbumCover ImageUrl="@_nextSong.ImageUrl" Height="50" />
+    <MudGrid Justify="Justify.Center">
+        <MudItem sm="12">
+            <MudText Align="Align.Center" Class="py-2" Typo="Typo.h6">Prochaine : @_nextSong.Name</MudText>
+        </MudItem>
+    </MudGrid>
 </MudPopover>
 
 @code {
@@ -16,7 +19,7 @@
     public required PlayingSong PlayingSong { get; set; }
     Song? _nextSong;
     bool _open = false;
-    readonly static TimeSpan timeLeft = TimeSpan.FromSeconds(10);
+    readonly static TimeSpan timeLeft = TimeSpan.FromSeconds(20);
     async Task updateData()
     {
         var newSong = await Player.GetNextSong();

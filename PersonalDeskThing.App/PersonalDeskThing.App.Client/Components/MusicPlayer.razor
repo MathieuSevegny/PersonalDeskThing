@@ -6,7 +6,6 @@
     return;
 }
 
-
 <MudContainer>
     <MudGrid Justify="Justify.Center">
         <MudItem md="12" xl="6" xxl="6">
@@ -20,6 +19,7 @@
                         <Controls Player="@Player" IsPlaying="@playingSong.IsPlaying" />
                     </MudItem>
                 </MudGrid>
+                <NextSongPopover Player="@Player" PlayingSong="@playingSong" />
             </MudPaper>
             <ProgressBar Song="@playingSong" OnSongFinished="updateData" />
         </MudItem>

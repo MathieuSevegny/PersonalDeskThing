@@ -38,7 +38,17 @@ namespace PersonalDeskThing.App.Spotify
 
         public async Task<PlayingSong?> GetCurrentSong()
         {
-            var playback = await _client.Player.GetCurrentPlayback();
+            CurrentlyPlayingContext? playback;
+            try
+            {
+                playback = await _client.Player.GetCurrentPlayback();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+            
             var builder = new SongBuilder();
 
             if (playback == null)
@@ -61,35 +71,80 @@ namespace PersonalDeskThing.App.Spotify
 
         public async Task<bool> NextSong()
         {
-            await _client.Player.SkipNext().ConfigureAwait(true);
-            await sendSongUpdated().ConfigureAwait(true);
+            try
+            {
+                await _client.Player.SkipNext().ConfigureAwait(true);
+                await sendSongUpdated().ConfigureAwait(true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            
             return true;
         }
 
         public async Task<bool> Pause()
         {
-            await _client.Player.PausePlayback().ConfigureAwait(true);
-            await sendSongUpdated().ConfigureAwait(true);
+            try
+            {
+                await _client.Player.PausePlayback().ConfigureAwait(true);
+                await sendSongUpdated().ConfigureAwait(true);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            
             return true;
         }
 
         public async Task<bool> Play()
         {
-            await _client.Player.ResumePlayback().ConfigureAwait(true);
-            await sendSongUpdated().ConfigureAwait(true);
+            try
+            {
+                await _client.Player.ResumePlayback().ConfigureAwait(true);
+                await sendSongUpdated().ConfigureAwait(true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            
             return true;
         }
 
         public async Task<bool> PreviousSong()
         {
-            await _client.Player.SkipPrevious().ConfigureAwait(true);
-            await sendSongUpdated().ConfigureAwait(true);
+            try
+            {
+                await _client.Player.SkipPrevious().ConfigureAwait(true);
+                await sendSongUpdated().ConfigureAwait(true);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            
             return true;
         }
 
         public async Task<Song?> GetNextSong()
         {
-            var queue = await _client.Player.GetQueue().ConfigureAwait(true);
+            QueueResponse? queue;
+            try
+            {
+                queue = await _client.Player.GetQueue().ConfigureAwait(true);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
             if (queue == null || queue.Queue.Count == 0)
             {
                 return null;
