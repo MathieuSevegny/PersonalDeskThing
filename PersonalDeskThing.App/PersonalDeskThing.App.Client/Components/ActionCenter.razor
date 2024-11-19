@@ -1,0 +1,22 @@
+﻿@rendermode InteractiveAuto
+<MudContainer Class="v100 mt-5" Style="height:90%">
+    <MudPaper Style="height:100%">
+        <MudGrid Justify="Justify.Center">
+            @foreach (var action in Actions)
+            {
+                <MudItem>
+                    <MudButton OnClick="@(()=>action.Launch())">
+                        <MudImage Src="@action.Image.ToString()" Width="80" Height="80" Elevation="25" Class="rounded-lg" />
+                    </MudButton>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudPaper>
+</MudContainer>
+
+
+@code {
+    [Parameter]
+    public required IEnumerable<IAction> Actions { get; set; }
+    
+}

@@ -1,0 +1,22 @@
+﻿@rendermode InteractiveAuto
+<MudGrid Class="mt-4">
+    <MudItem md="8">
+        <MudGrid>
+            <MudItem md="12" Class="v50">
+                <Time />
+            </MudItem>
+            <MudItem md="12" Class="v50">
+                <MusicPlayer Player="@Player" />
+            </MudItem>
+        </MudGrid>
+    </MudItem>
+    <MudItem md="4" Class="v100">
+        <ActionCenter Actions="@Actions" />
+    </MudItem>
+</MudGrid>
+@code {
+    [Parameter]
+    public required IEnumerable<IAction> Actions { get; set; }
+    [Parameter]
+    public required IMusicPlayer Player { get; set; }
+}

@@ -6,12 +6,12 @@
     return;
 }
 
-<MudContainer>
+<MudContainer Class="v50">
     <MudGrid Justify="Justify.Center">
         <MudItem md="12" xl="12" xxl="12">
             <MudPaper Class="align-center justify-center">
                 <MudGrid Justify="Justify.Center" Class="align-center justify-center mud-width-full">
-                    <MudItem md="6" Class="d-flex align-center justify-center mud-width-full">
+                    <MudItem md="6" Class="d-flex align-center justify-center">
                         <AlbumCover ImageUrl="@playbackState.CurrentSong.ImageUrl" />
                     </MudItem>
                     <MudItem xs="12" sm="8" md="6" xl="6" Class="my-3">
@@ -20,8 +20,12 @@
                     </MudItem>
                 </MudGrid>
                 <NextSongPopover Player="@Player" PlayingSong="@playbackState?.CurrentSong" />
+                @if (playbackState != null)
+                {
+                    <ProgressBar Song="@playbackState.CurrentSong" OnSongFinished="updateData" />
+                }
             </MudPaper>
-            <ProgressBar Song="@playbackState.CurrentSong" OnSongFinished="updateData" />
+            
         </MudItem>
     </MudGrid>
 </MudContainer>

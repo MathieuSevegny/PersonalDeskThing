@@ -27,3 +27,15 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+.v50{
+    min-height: 40vh
+}
+.v100 {
+    min-height: 75vh
+}
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

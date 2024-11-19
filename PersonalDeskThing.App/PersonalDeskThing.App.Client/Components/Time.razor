@@ -1,0 +1,28 @@
+﻿<MudContainer Style="width:100%;height:100%">
+    <MudGrid Justify="Justify.Center" Style="width:100%;height:100%">
+        <MudItem Style="width:100%;height:100%">
+            <MudPaper Height="100%" Width="102%" Class="center align-center justify-center">
+                <MudText Align="Align.Center" Typo="Typo.h1">@TimeString</MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+@code {
+    string TimeString = string.Empty;
+    static System.Timers.Timer _refreshDataTimer = null!;
+    protected override async Task OnInitializedAsync()
+    {
+        await updateData();
+        _refreshDataTimer = new System.Timers.Timer(5000);
+        _refreshDataTimer.Elapsed += async (sender, e) => await updateData();
+        _refreshDataTimer.Enabled = true;
+    }
+    async Task updateData()
+    {
+        TimeString = DateTime.Now.ToString("HH:mm");
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

@@ -1,5 +1,7 @@
 ﻿@rendermode InteractiveServer
 @page "/"
+@using PersonalDeskThing.App.Client.Interfaces
+@using PersonalDeskThing.App.Commands
 @inject IDialogService DialogService
 @inject NavigationManager NavigationManager
 @inject SpotifyAuthService SpotifyAuthService
@@ -10,6 +12,8 @@
     <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
     <MudSpacer />
 </MudAppBar>
+<br/>
+<br />
 
 @if (service == null){
     <MudDialog Visible="@showLoginDialog">
@@ -25,17 +29,21 @@
     </MudDialog>
 }
 else{
-    <MudPaper Width="500" Class="pt-6">
-        <MusicPlayer Player="service"/>
-    </MudPaper>
+    <DeskThing Player="@service" Actions="@actions"/>
 }
 
 @code {
     SpotifyService? service;
     bool showLoginDialog = false;
+    List<IAction> actions = null!;
 
     protected override async Task OnInitializedAsync()
     {
+        actions = new List<IAction>()
+        {
+            new LaunchApp(@"C:\ProgramData\PersonalDeskThing\Links\Spotify.lnk", new Uri("https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_Green.png")),
+            new LaunchApp(@"C:\ProgramData\PersonalDeskThing\Links\Discord.lnk", new Uri("https://cdn-icons-png.flaticon.com/512/5968/5968756.png"))
+        };
         var tempService = await SpotifyAuthService.CreateFromCache();
 
         if (tempService == null)
